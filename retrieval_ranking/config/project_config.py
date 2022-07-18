@@ -1,0 +1,29 @@
+import os
+
+# root path
+ROOT_DIR = os.path.dirname(os.path.abspath(__file__))
+
+# logger
+LOGGER_NAME = "smart_find_phrase_search"
+LOG_LEVEL   = "DEBUG"
+
+# post-processing
+REMOVE_CANDIDATE_STOPWORDS = False
+
+
+# model: NO CONTEXT
+# MAX_BATCH_BERT = 2048               # 512
+# MAX_BATCH_SENTENCEBERT = 4096       # 512
+# MAX_BATCH_SPANBERT = 4096           # 256
+# MAX_BATCH_USE = 10240
+# MAX_BATCH_SimCSE = 4096
+# MAX_BATCH_DENSEPHRASES = 4096
+
+# model: WITH CONTEXT
+MAX_BATCH_BERT = 256
+MAX_BATCH_SENTENCEBERT = 2048
+MAX_BATCH_SPANBERT = 512
+MAX_BATCH_USE = 1024
+MAX_BATCH_SimCSE = 256
+MAX_BATCH_DENSEPHRASES = 512
+

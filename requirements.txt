@@ -1,0 +1,27 @@
+# QA Huggingface
+transformers
+datasets
+tqdm
+
+# Phrase Similarity
+pytorch-lightning
+sklearn
+simcse
+sentence-transformers
+
+# DensePhrase
+faiss-gpu
+transformers
+spacy
+h5py
+blosc
+ujson
+rouge
+wandb
+nltk
+flask
+flask_cors
+tornado
+requests-futures
+
+wandb

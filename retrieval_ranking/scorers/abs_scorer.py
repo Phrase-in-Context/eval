@@ -9,17 +9,17 @@ class AbsScorer(object):
         self.nlp = spacy.load("en_core_web_sm")
         self.tokenizer = tokenizer
 
-    def _embed_batch(self, list_inputText, max_length=64, contextual=False):
+    def embed_batch(self, list_inputText, max_length=64, contextual=False):
         pass
 
     def score_batch(self, query, list_phrase, list_oracle=None):
         """ """
         list_phrase = list_phrase + (list_oracle if list_oracle else [])
 
-        query_emb = self._embed_batch([query])             # [batch, dim]
-        phrase_emb = self._embed_batch(list_phrase)        # [batch, dim]
+        query_emb = self.embed_batch([query])               # [batch, dim]
+        phrase_emb = self.embed_batch(list_phrase)          # [batch, dim]
 
-        score = cosine_similarity(query_emb, phrase_emb)   # [batch]
+        score = cosine_similarity(query_emb, phrase_emb)    # [batch]
 
         return score.tolist()[-1]
 
@@ -54,13 +54,13 @@ class AbsScorer(object):
                 new_list_query.append((query, list(query_index)))
 
         # Contextual phrase candidates
-        context_phrase_embs = self._embed_batch(context_phrases, max_length=max_seq_length, contextual=True)
-        phrase_embs = self._extract_contextual_phrase_embeddings_with_context_window(new_list_phrase, context_phrases, context_phrase_embs, max_length=max_seq_length)
+        context_phrase_embs = self.embed_batch(context_phrases, max_length=max_seq_length, contextual=True)
+        phrase_embs = self.extract_contextual_phrase_embeddings_with_context_window(new_list_phrase, context_phrases, context_phrase_embs, max_length=max_seq_length)
 
         # Contextual queries
         if use_context_query:
-            context_query_embs = self._embed_batch(context_queries, max_length=max_seq_length, contextual=True)
-            query_emb = self._extract_contextual_phrase_embeddings_with_context_window(new_list_query, context_queries, context_query_embs, max_length=max_seq_length)
+            context_query_embs = self.embed_batch(context_queries, max_length=max_seq_length, contextual=True)
+            query_emb = self.extract_contextual_phrase_embeddings_with_context_window(new_list_query, context_queries, context_query_embs, max_length=max_seq_length)
             score = cosine_similarity(query_emb, phrase_embs)  # [batch]
 
             # Extract scores and convert them to float since float32 is not JSON serializable
@@ -68,12 +68,12 @@ class AbsScorer(object):
             return score
 
         # Non-contextual query
-        query_emb = self._embed_batch([query])              # [batch, dim]
+        query_emb = self.embed_batch([query])              # [batch, dim]
         score = cosine_similarity(query_emb, phrase_embs)   # [batch]
 
         return score.tolist()[-1]
 
-    def _extract_contextual_phrase_embeddings_with_context_window(self, list_phrase, context_phrases, context_phrase_embs, max_length=256):
+    def extract_contextual_phrase_embeddings_with_context_window(self, list_phrase, context_phrases, context_phrase_embs, max_length=256):
         all_phrase_embs = []
 
         encoded_phrase_list = self.tokenizer.batch_encode_plus([phrase for (phrase, _) in list_phrase], max_length=128, padding='max_length', truncation=True, add_special_tokens=True)

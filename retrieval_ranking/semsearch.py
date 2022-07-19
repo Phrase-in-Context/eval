@@ -3,7 +3,7 @@ from commons import AbsSearch
 from config import CreateLogger
 from config import REMOVE_CANDIDATE_STOPWORDS
 
-from scorers import BertScorer #, SentenceBertScorer, SpanBertScorer, USEScorer, SimCSEScorer, DensePhrasesScorer
+from scorers import BertScorer, SentenceBertScorer, SpanBertScorer, USEScorer, SimCSEScorer, DensePhrasesScorer
 from extractors import NGramExtractor
 
 import spacy
@@ -55,12 +55,12 @@ class SemanticSearch(AbsSearch):
             instantiated_scorer = SentenceBertScorer(scorer_type, model_fpath)
         elif scorer == "SpanBERT":
             instantiated_scorer = SpanBertScorer(scorer_type, model_fpath)
-        elif scorer == "USE-v5":
-            instantiated_scorer = USEScorer(scorer_type)
         elif scorer == "SimCSE":
-            instantiated_scorer = SimCSEScorer(scorer_type)
+            instantiated_scorer = SimCSEScorer(scorer_type, model_fpath)
         elif scorer == "DensePhrases":
-            instantiated_scorer = DensePhrasesScorer(scorer_type)
+            instantiated_scorer = DensePhrasesScorer(scorer_type, model_fpath)
+        elif scorer == "USE":
+            instantiated_scorer = USEScorer(scorer_type)
         else:
             assert False
 
@@ -74,7 +74,7 @@ class SemanticSearch(AbsSearch):
         self.max_seq_length = int(args.max_seq_length)
 
         # Some transformers cannot handle long sentences --> Skip those sentences to avoid crashing the process
-        if args.scorer != "use":
+        if args.scorer != "USE":
             for sent in sentences:
                 tokens = [token.text.lower() for token in self.nlp.tokenizer(sent)]
                 encoded_sent = self.scorer.tokenizer.encode_plus(text=' '.join(tokens), add_special_tokens=True)
@@ -152,9 +152,7 @@ class SemanticSearch(AbsSearch):
     '''
     def search(self, query, top_n=10, window_size=0):
         """ """
-
         self.logger.debug('number of candidates: %d', len(self.phrases))
-        # self.logger.debug('candidates: %s', self.phrases)
 
         # apply scorer
         if hasattr(self.scorer.__class__, 'score_batch') and callable(getattr(self.scorer.__class__, 'score_batch')):

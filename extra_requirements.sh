@@ -1,6 +1,7 @@
 # Install DensePhrases
 git clone -b v1.1.0 https://github.com/princeton-nlp/DensePhrases.git
 cd DensePhrases
+# yes yes | ./config.sh
 rm -rf slides/
 python setup.py develop
 

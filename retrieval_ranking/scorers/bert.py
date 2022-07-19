@@ -1,6 +1,5 @@
 """ Bert model for Phrase search """
 
-""" HuggingFace API"""
 import sys
 sys.path.append("..")
 
@@ -11,66 +10,56 @@ from .abs_scorer import AbsScorer
 from config import CreateLogger
 from config import MAX_BATCH_BERT
 
-MAX_BATCH = MAX_BATCH_BERT
-
 
 class BertScorer(AbsScorer):
 
     def __init__(self, scorer_type, model_fpath):
         """ """
         self.logger = CreateLogger()
-        
-        self.logger.debug("[model]: BertPretrainedScorer")
+        self.logger.debug("[model]: BertScorer")
         self.logger.debug("[scorer_type]: %s", scorer_type)
 
         self.device = 'cuda' if torch.cuda.is_available() else 'cpu'
         self.logger.info("cpu/gpu: %s", self.device)
 
-        # THANG
-        self.model_name = scorer_type
-        # self.model_name = '../../data/pretrained_models/bert-base-uncased/finetuned-11'   # BERT-base-QA
-        # self.model_name = '../../data/pretrained_models/bert-large-uncased/finetuned-11'  # BERT-large-QA
-
+        self.model_name = scorer_type if not model_fpath else model_fpath
         self.config = AutoConfig.from_pretrained(self.model_name)
         self.tokenizer = AutoTokenizer.from_pretrained(self.model_name)
         self.model = AutoModel.from_pretrained(pretrained_model_name_or_path=self.model_name, config=self.config)
 
-        # freeze model parameters
+        # Freeze model parameters
         for param in self.model.parameters():
             param.requires_grad = False
             
         self.model.to(self.device)
         super().__init__(self.tokenizer)
 
-    def _embed_batch(self, list_inputText, max_length=64, contextual=False):
+    def embed_batch(self, list_inputText, max_length=64, contextual=False):
         """ """
         self.model.eval()
 
         with torch.no_grad():
-
             # First-batch
-            rst = self._transformer_embedding_batch(list_inputText[:MAX_BATCH], max_length=max_length, contextual=contextual).cpu()
+            rst = self.embedding_batch(list_inputText[:MAX_BATCH_BERT], max_length=max_length, contextual=contextual).cpu()
 
-            # Additional-batch if the size of the list_inputText is larger than MAX_BATCH
-            itr_additional = int(len(list_inputText) / MAX_BATCH)
+            # Additional-batch if the size of the list_inputText is larger than MAX_BATCH_BERT
+            itr_additional = int(len(list_inputText) / MAX_BATCH_BERT)
         
             for i in range(itr_additional):
-                start_index = (i+1)*MAX_BATCH
-                
-                list_candidates = list_inputText[start_index:start_index+MAX_BATCH]
+                start_index = (i+1)*MAX_BATCH_BERT
+                list_candidates = list_inputText[start_index:start_index+MAX_BATCH_BERT]
 
                 if len(list_candidates) > 0:         
-                    rst_tmp = self._transformer_embedding_batch(list_inputText[start_index:start_index+MAX_BATCH], max_length=max_length, contextual=contextual).cpu()
+                    rst_tmp = self.embedding_batch(list_inputText[start_index:start_index+MAX_BATCH_BERT], max_length=max_length, contextual=contextual).cpu()
                     rst = torch.cat((rst, rst_tmp), dim=0)
 
             return rst
 
-    def _transformer_embedding_batch(self, list_inputText, max_length=64, contextual=False):
+    def embedding_batch(self, list_inputText, max_length=64, contextual=False):
         list_text = []
         list_attn_mask = []
 
         for text in list_inputText:
-
             ret = self.tokenizer.encode_plus(text=text, max_length=max_length, padding='max_length',  truncation=True, add_special_tokens=True)
 
             # Make batch for pytorch

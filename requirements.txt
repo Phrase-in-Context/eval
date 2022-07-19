@@ -2,12 +2,17 @@
 transformers
 datasets
 tqdm
+wandb
 
 # Phrase Similarity
 pytorch-lightning
 sklearn
 simcse
 sentence-transformers
+
+# Phrase Retrieval
+tensorflow
+tensorflow-hub
 
 # DensePhrase
 faiss-gpu
@@ -24,4 +29,3 @@ flask_cors
 tornado
 requests-futures
 
-wandb

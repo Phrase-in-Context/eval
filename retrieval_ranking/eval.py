@@ -26,7 +26,7 @@ stop_words = set(stopwords.words('english'))
 tokenizer = nltk.data.load('tokenizers/punkt/PY3/english.pickle')
 
 
-def _get_metrics(run_results):
+def get_metrics(run_results):
     n_all = 0
     n_top_1, n_top_3, n_top_5, mrr_5 = 0, 0, 0, 0
     n_acc_cand = 0
@@ -68,7 +68,7 @@ def _get_metrics(run_results):
     return metrics
 
 
-def _export_results(eval_results, run_results, outdir):
+def export_results(eval_results, run_results, outdir):
     if not os.path.exists(outdir):
         os.makedirs(outdir)
 
@@ -98,7 +98,7 @@ def extract_context_for_oracle(context, answer):
     return gt_sentence, gt_sentence_idx
 
 
-def _run_eval(args, system, examples):
+def run_eval(args, system, examples):
     """ """
     random.seed(42)
 
@@ -109,7 +109,6 @@ def _run_eval(args, system, examples):
 
     # if "debug" flag is set -> test only 10 samples
     if args.debug:
-        # examples = random.sample(examples, k=10)
         examples = examples.select(range(0, 10))
 
     run_results = []
@@ -141,7 +140,7 @@ def _run_eval(args, system, examples):
             'result': search_result
         })
 
-    eval_results = _get_metrics(run_results)
+    eval_results = get_metrics(run_results)
 
     return eval_results, run_results
 
@@ -151,10 +150,10 @@ def run(args):
     # Load data
     data = load_dataset("PiC/" + args.dataset, args.data_subset)["test"]
 
-    # Load system
+    # ThangPM: Load system
     system = SemanticSearch()
 
-    # Load model
+    # ThangPM: Load model
     model_config = os.path.join(ROOT_DIR, "model_config.json")
     with open(model_config, 'r') as f:
         config = json.load(f)
@@ -166,8 +165,8 @@ def run(args):
     system.set_scorer(args.scorer, model_fpath, args.scorer_type)
     system.set_extractor(args.extractor, int(args.ngram_min), int(args.ngram_max))
 
-    # Run evaluation
-    eval_results, run_results = _run_eval(args, system, data)
+    # ThangPM: Run evaluation
+    eval_results, run_results = run_eval(args, system, data)
     eval_results['dataset'] = args.dataset
     eval_results['data_subset'] = args.data_subset
     eval_results['scorer'] = args.scorer
@@ -180,7 +179,7 @@ def run(args):
     with open(os.path.join(args.outdir, 'configs.json'), 'w') as f:
         json.dump(args.__dict__, f, indent=4)
 
-    _export_results(eval_results, run_results, args.outdir)
+    export_results(eval_results, run_results, args.outdir)
 
 
 if __name__ == "__main__":
@@ -188,28 +187,28 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser()
 
     parser.add_argument('--extractor', help='model name', choices=['ngrams', 'noun_chunks'])
-    parser.add_argument('--ngram_min', help='ngram min', default=2)
-    parser.add_argument('--ngram_max', help='ngram max', default=3)
+    parser.add_argument('--ngram_min', type=int, help='ngram min', default=2)
+    parser.add_argument('--ngram_max', type=int, help='ngram max', default=3)
     parser.add_argument('--scorer', help='model name', choices=['BERT', 'SentenceBERT', 'SpanBERT', 'USE', 'SimCSE', 'PhraseBERT', 'DensePhrases'])
     parser.add_argument('--scorer_type', help='transformers type',
                         choices=['bert-base-uncased', 'bert-large-uncased', 'sentence-transformers/bert-base-nli-stsb-mean-tokens',
-                                 'span-bert-base-cased', 'use-v5', 'princeton-nlp/sup-simcse-bert-base-uncased',
-                                 'whaleloops/phrase-bert', 'princeton-nlp/densephrases-multi-query-multi',], default="")
+                                 'SpanBERT/spanbert-base-cased', 'use-v5', 'princeton-nlp/sup-simcse-bert-base-uncased',
+                                 'whaleloops/phrase-bert', 'princeton-nlp/densephrases-multi-query-multi',
+                                 'bert-base-uncased-qa', 'bert-large-uncased-qa', 'sbert-base-nli-stsb-mean-tokens-qa',
+                                 'phrase-bert-qa', 'spanbert-base-cased-qa', 'sup-simcse-bert-base-uncased-qa'], default="")
 
     parser.add_argument('--dataset', default="PiC/phrase_retrieval")
     parser.add_argument('--data_subset', help='subset of the dataset')
 
     parser.add_argument('--debug', action="store_true")
-    parser.add_argument('--contextual', action="store_true")
     parser.add_argument('--oracle_candidates', action="store_true")
-
-    parser.add_argument('--context_window', help='context boundary for a phrase', default=-1)
-    parser.add_argument('--max_seq_length', help='define max seq length of a sentence to handle', default=128)
+    parser.add_argument('--contextual', action="store_true")
+    parser.add_argument('--context_window', type=int, help='context boundary for a phrase', default=-1)
+    parser.add_argument('--max_seq_length', type=int, help='define max seq length of a sentence to handle', default=128)
     parser.add_argument('--outdir', help='output directory')
 
     args = parser.parse_args()
 
-    print()
     format_string = " - {:35}: {}"
     print("{:=^70}".format(" EVALUATION CONFIGURATION "))
     print("Summary")
@@ -218,6 +217,14 @@ if __name__ == "__main__":
         print(format_string.format(k, v))
 
     start_time = time.time()
+    sys.argv = [sys.argv[0]]    # Remove arguments to avoid crashing DensePhrases's argparse
+
+    if args.scorer == "USE" and args.contextual:
+        sys.exit('Message: USE-v5 is only supported for non-contextual phrase embeddings. Please try other models!')
+    elif args.scorer == "DensePhrases":
+        sys.exit("Message: DensePhrases is currently not supported. Please try other models!")
+
+    # ThangPM: Run semantic search
     run(args)
 
     logger.info("elapsed time: %.2f s", time.time() - start_time)

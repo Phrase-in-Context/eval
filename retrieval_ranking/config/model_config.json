@@ -25,11 +25,6 @@
         "scorer_type":"SpanBERT/spanbert-base-cased"
     },
     {
-        "scorer":"USE",
-        "model_fpath":"../models/use-v5",
-        "scorer_type":"use-v5"
-    },
-    {
         "scorer":"SimCSE",
         "model_fpath":"",
         "scorer_type":"princeton-nlp/sup-simcse-bert-base-uncased"
@@ -38,5 +33,41 @@
         "scorer":"DensePhrases",
         "model_fpath":"",
         "scorer_type":"princeton-nlp/densephrases-multi-query-multi"
+    },
+    {
+        "scorer": "USE",
+        "model_fpath": "../models/use-v5",
+        "scorer_type": "use-v5"
+    },
+
+    {
+        "scorer":"BERT",
+        "model_fpath":"../results/phrase_retrieval/PR-pass/qa/bert-base-uncased/finetuned",
+        "scorer_type":"bert-base-uncased-qa"
+    },
+    {
+        "scorer":"BERT",
+        "model_fpath":"../results/phrase_retrieval/PR-pass/qa/bert-large-uncased/finetuned",
+        "scorer_type":"bert-large-uncased-qa"
+    },
+    {
+        "scorer":"SentenceBERT",
+        "model_fpath":"../results/phrase_retrieval/PR-pass/qa/sentence-transformers/bert-base-nli-stsb-mean-tokens/finetuned",
+        "scorer_type":"sbert-base-nli-stsb-mean-tokens-qa"
+    },
+    {
+        "scorer":"PhraseBERT",
+        "model_fpath":"../results/phrase_retrieval/PR-pass/qa/whaleloops/phrase-bert/finetuned",
+        "scorer_type":"phrase-bert-qa"
+    },
+    {
+        "scorer":"SpanBERT",
+        "model_fpath":"../results/phrase_retrieval/PR-pass/qa/SpanBERT/spanbert-base-cased/finetuned",
+        "scorer_type":"spanbert-base-cased-qa"
+    },
+    {
+        "scorer":"SimCSE",
+        "model_fpath":"./results/phrase_retrieval/PR-pass/qa/princeton-nlp/sup-simcse-bert-base-uncased/finetuned",
+        "scorer_type":"sup-simcse-bert-base-uncased-qa"
     }
 ]

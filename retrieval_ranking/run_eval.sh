@@ -53,22 +53,20 @@ function run() {
 dataset=phrase_retrieval
 data_subset=PR-pass
 extractor=ngrams
-oracle=True
-contextual=True
-noun_chunk_filter=False
-DEBUG=True
 max_seq_len=256
 
+oracle=True
+contextual=True
+DEBUG=True
 
-run ${dataset} "${data_subset}" "${extractor}" 2 3 BERT bert-base-uncased "${max_seq_len}" "${oracle}" "${contextual}" -1 0
-#run ${dataset} ${data_subset} ${extractor} 2 3 BERT bert-large-uncased ${max_seq_len} ${oracle} ${noun_chunk_filter} ${contextual} -1 1
 
-#run ${dataset} ${data_subset} ${extractor} 2 3 sentbert phrasebert 128 ${oracle} ${noun_chunk_filter} ${contextual} -1 3
-#run ${dataset} ${data_subset} ${extractor} 2 3 sentbert Sbert-base-nli-stsb-mean-tokens 128 ${oracle} ${noun_chunk_filter} ${contextual} -1 2
-
-#run ${dataset} ${data_subset} ${extractor} 2 3 spanbert span-bert-base-cased ${max_seq_len} ${oracle} ${noun_chunk_filter} ${contextual} -1 1
-#run ${dataset} ${data_subset} ${extractor} 2 3 densephrases densephrases-multi-query-multi ${max_seq_len} ${oracle} ${noun_chunk_filter} ${contextual} -1 2
-#run ${dataset} ${data_subset} ${extractor} 2 3 simcse simcse-bert-base-uncased ${max_seq_len} ${oracle} ${noun_chunk_filter} ${contextual} -1 7
-#run ${dataset} ${data_subset} ${extractor} 2 3 use use-v5 128 ${oracle} ${noun_chunk_filter} ${contextual} -1 7
+#run ${dataset} "${data_subset}" "${extractor}" 2 3 BERT "bert-base-uncased" "${max_seq_len}" "${oracle}" "${contextual}" -1 0
+#run ${dataset} "${data_subset}" "${extractor}" 2 3 BERT "bert-large-uncased" "${max_seq_len}" "${oracle}" "${contextual}" -1 1
+#run ${dataset} "${data_subset}" "${extractor}" 2 3 SentenceBERT "sentence-transformers/bert-base-nli-stsb-mean-tokens" 128 "${oracle}" "${contextual}" -1 2
+#run ${dataset} "${data_subset}" "${extractor}" 2 3 PhraseBERT "whaleloops/phrase-bert" 128 "${oracle}" "${contextual}" -1 3
+#run ${dataset} "${data_subset}" "${extractor}" 2 3 SpanBERT "SpanBERT/spanbert-base-cased" "${max_seq_len}" "${oracle}" "${contextual}" -1 4
+run ${dataset} "${data_subset}" "${extractor}" 2 3 DensePhrases "princeton-nlp/densephrases-multi-query-multi" "${max_seq_len}" "${oracle}" "${contextual}" -1 5
+#run ${dataset} "${data_subset}" "${extractor}" 2 3 SimCSE "princeton-nlp/sup-simcse-bert-base-uncased" "${max_seq_len}" "${oracle}" "${contextual}" -1 6
+#run ${dataset} "${data_subset}" "${extractor}" 2 3 USE "use-v5" "${max_seq_len}" "${oracle}" "${contextual}" -1 7
 
 

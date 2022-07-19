@@ -18,7 +18,12 @@ function run() {
 
   export CUDA_VISIBLE_DEVICES=$GPU
 
-  OUTPUT_DIR=../results/"${DATASET}"/"${SUBSET}"/ranking/"${SCORE_TYPE}"
+  if [[ ${CONTEXTUAL} == "True" ]]; then
+    OUTPUT_DIR=../results/"${DATASET}"/"${SUBSET}"/ranking/contextual/"${SCORE_TYPE}"
+  else
+    OUTPUT_DIR=../results/"${DATASET}"/"${SUBSET}"/ranking/non_contextual/"${SCORE_TYPE}"
+  fi
+
   mkdir -p ${OUTPUT_DIR}
 
   local params=()
@@ -60,13 +65,13 @@ contextual=True
 DEBUG=True
 
 
-#run ${dataset} "${data_subset}" "${extractor}" 2 3 BERT "bert-base-uncased" "${max_seq_len}" "${oracle}" "${contextual}" -1 0
-#run ${dataset} "${data_subset}" "${extractor}" 2 3 BERT "bert-large-uncased" "${max_seq_len}" "${oracle}" "${contextual}" -1 1
-#run ${dataset} "${data_subset}" "${extractor}" 2 3 SentenceBERT "sentence-transformers/bert-base-nli-stsb-mean-tokens" 128 "${oracle}" "${contextual}" -1 2
-#run ${dataset} "${data_subset}" "${extractor}" 2 3 PhraseBERT "whaleloops/phrase-bert" 128 "${oracle}" "${contextual}" -1 3
-#run ${dataset} "${data_subset}" "${extractor}" 2 3 SpanBERT "SpanBERT/spanbert-base-cased" "${max_seq_len}" "${oracle}" "${contextual}" -1 4
+run ${dataset} "${data_subset}" "${extractor}" 2 3 BERT "bert-base-uncased" "${max_seq_len}" "${oracle}" "${contextual}" -1 0
+run ${dataset} "${data_subset}" "${extractor}" 2 3 BERT "bert-large-uncased" "${max_seq_len}" "${oracle}" "${contextual}" -1 1
+run ${dataset} "${data_subset}" "${extractor}" 2 3 SentenceBERT "sentence-transformers/bert-base-nli-stsb-mean-tokens" 128 "${oracle}" "${contextual}" -1 2
+run ${dataset} "${data_subset}" "${extractor}" 2 3 PhraseBERT "whaleloops/phrase-bert" 128 "${oracle}" "${contextual}" -1 3
+run ${dataset} "${data_subset}" "${extractor}" 2 3 SpanBERT "SpanBERT/spanbert-base-cased" "${max_seq_len}" "${oracle}" "${contextual}" -1 4
 run ${dataset} "${data_subset}" "${extractor}" 2 3 DensePhrases "princeton-nlp/densephrases-multi-query-multi" "${max_seq_len}" "${oracle}" "${contextual}" -1 5
-#run ${dataset} "${data_subset}" "${extractor}" 2 3 SimCSE "princeton-nlp/sup-simcse-bert-base-uncased" "${max_seq_len}" "${oracle}" "${contextual}" -1 6
-#run ${dataset} "${data_subset}" "${extractor}" 2 3 USE "use-v5" "${max_seq_len}" "${oracle}" "${contextual}" -1 7
+run ${dataset} "${data_subset}" "${extractor}" 2 3 SimCSE "princeton-nlp/sup-simcse-bert-base-uncased" "${max_seq_len}" "${oracle}" "${contextual}" -1 6
+run ${dataset} "${data_subset}" "${extractor}" 2 3 USE "use-v5" "${max_seq_len}" "${oracle}" "${contextual}" -1 7
 
 

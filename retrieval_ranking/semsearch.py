@@ -180,4 +180,23 @@ class SemanticSearch(AbsSearch):
         
         return results
 
+    '''
+    desc       : compute matching scores between query and phrase
+    query      : query to be compared
+    list_phrase: phrases to be comapred with query
+    '''
+    def match(self, query, list_phrase):
 
+        self.logger.debug('number of candidates: %d', len(list_phrase))
+
+        # Apply scorer
+        if hasattr(self.scorer.__class__, 'score_batch') and callable(getattr(self.scorer.__class__, 'score_batch')):
+            phrases = list_phrase
+            scores = self.scorer.score_batch(query, phrases)
+            results = [{"phrase": phrase, "score": score} for phrase, score in zip(phrases, scores)]
+        else:
+            results = [{"phrase": phrase, "score": self.scorer.score(query, phrase)} for phrase in list_phrase]
+
+        results = sorted(results, reverse=True, key=lambda x: x['score'])
+
+        return results

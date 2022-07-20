@@ -18,6 +18,11 @@ function run() {
 
   export CUDA_VISIBLE_DEVICES=$GPU
 
+  if [[ ${SCORER} == "USE" ]]; then
+    # ThangPM: To fix the issue: "TensorFlow libdevice not found"
+    export XLA_FLAGS=--xla_gpu_cuda_data_dir=$(find /usr/ -type d -name nvvm 2>/dev/null)/../
+  fi
+
   if [[ ${CONTEXTUAL} == "True" ]]; then
     OUTPUT_DIR=../results/"${DATASET}"/"${SUBSET}"/ranking/contextual/"${SCORE_TYPE}"
   else
@@ -62,7 +67,7 @@ max_seq_len=256
 
 oracle=True
 contextual=True
-DEBUG=True
+DEBUG=False
 
 
 run ${dataset} "${data_subset}" "${extractor}" 2 3 BERT "bert-base-uncased" "${max_seq_len}" "${oracle}" "${contextual}" -1 0

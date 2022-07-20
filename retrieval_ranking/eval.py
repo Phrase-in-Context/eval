@@ -57,7 +57,7 @@ def get_metrics(run_results):
             'Top@1': round(n_top_1 * 100 / n_all, 2),
             'Top@3': round(n_top_3 * 100 / n_all, 2),
             'Top@5': round(n_top_5 * 100 / n_all, 2),
-            'MRR@5': round(n_top_5 * 100 / n_all, 2),
+            'MRR@5': round(mrr_5 * 100 / n_all, 2),
             'Avg. acc for candidate extraction': float(n_acc_cand) / n_all,
             'Avg. number of candidates': float(n_candidates) / n_all,
             'Total count': n_all,
@@ -68,7 +68,7 @@ def get_metrics(run_results):
     return metrics
 
 
-def export_results(eval_results, run_results, outdir):
+def export_results(eval_results, run_results, outdir, contextual):
     if not os.path.exists(outdir):
         os.makedirs(outdir)
 
@@ -77,7 +77,10 @@ def export_results(eval_results, run_results, outdir):
     with open(os.path.join(outdir, 'run_results.json'), 'w') as fp:
         json.dump(run_results, fp, indent=4)
 
-    with open(os.path.join(outdir, '../../summary.txt'), 'a') as f:
+    subdir = "contextual" if contextual else "non_contextual"
+    summary_dir = outdir.split(subdir)[0]
+
+    with open(os.path.join(summary_dir, subdir, 'summary.txt'), 'a') as f:
         f.write(outdir + "\t")
         f.write(str(eval_results["Top@1"]) + "\t")
         f.write(str(eval_results["Top@3"]) + "\t")
@@ -114,13 +117,13 @@ def run_eval(args, system, examples):
     run_results = []
 
     for example in tqdm(examples):
-        system.set_text(args, example['context'], contextual=args.contextual)
+        system.set_text(example['context'], contextual=args.contextual, scorer=args.scorer, max_seq_length=args.max_seq_length)
         answers = example['answers']['text']
 
         # add oracle candidates (spans)
         if args.oracle_candidates:
             logger.debug("ADD ORACLES: %s", answers)
-            if args.oracle_candidates:
+            if args.contextual:
                 gt_sentence, gt_sentence_idx = extract_context_for_oracle(example['context'], answers[0])
                 system.add_oracles(set(answers), gt_sentence, gt_sentence_idx)
             else:
@@ -179,7 +182,7 @@ def run(args):
     with open(os.path.join(args.outdir, 'configs.json'), 'w') as f:
         json.dump(args.__dict__, f, indent=4)
 
-    export_results(eval_results, run_results, args.outdir)
+    export_results(eval_results, run_results, args.outdir, args.contextual)
 
 
 if __name__ == "__main__":

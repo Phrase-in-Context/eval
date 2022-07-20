@@ -66,15 +66,15 @@ class SemanticSearch(AbsSearch):
 
         self.scorer = instantiated_scorer
 
-    def set_text(self, args, context, contextual=False):
+    def set_text(self, context, contextual=False, scorer=None, max_seq_length=128):
         sentences = tokenizer.tokenize(context)
 
         self.sentences.clear()
         self.contextual = contextual
-        self.max_seq_length = int(args.max_seq_length)
+        self.max_seq_length = int(max_seq_length)
 
         # Some transformers cannot handle long sentences --> Skip those sentences to avoid crashing the process
-        if args.scorer != "USE":
+        if scorer != "USE":
             for sent in sentences:
                 tokens = [token.text.lower() for token in self.nlp.tokenizer(sent)]
                 encoded_sent = self.scorer.tokenizer.encode_plus(text=' '.join(tokens), add_special_tokens=True)
@@ -185,17 +185,16 @@ class SemanticSearch(AbsSearch):
     query      : query to be compared
     list_phrase: phrases to be comapred with query
     '''
-    def match(self, query, list_phrase):
+    def match(self, query, list_phrases):
 
-        self.logger.debug('number of candidates: %d', len(list_phrase))
+        self.logger.debug('number of candidates: %d', len(list_phrases))
 
         # Apply scorer
         if hasattr(self.scorer.__class__, 'score_batch') and callable(getattr(self.scorer.__class__, 'score_batch')):
-            phrases = list_phrase
-            scores = self.scorer.score_batch(query, phrases)
-            results = [{"phrase": phrase, "score": score} for phrase, score in zip(phrases, scores)]
+            scores = self.scorer.score_batch(query, list_phrases)
+            results = [{"phrase": phrase, "score": score} for phrase, score in zip(list_phrases, scores)]
         else:
-            results = [{"phrase": phrase, "score": self.scorer.score(query, phrase)} for phrase in list_phrase]
+            results = [{"phrase": phrase, "score": self.scorer.score(query, phrase)} for phrase in list_phrases]
 
         results = sorted(results, reverse=True, key=lambda x: x['score'])
 

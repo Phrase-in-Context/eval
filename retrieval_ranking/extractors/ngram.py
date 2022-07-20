@@ -8,6 +8,7 @@ from nltk.util import ngrams
 from config import CreateLogger
 from commons import AbsExtractor
 
+
 class NGramExtractor(AbsExtractor):
     
     def __init__(self, ngram_min=2, ngram_max=3, remove_stopword=False):

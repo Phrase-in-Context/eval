@@ -55,7 +55,10 @@ class SentenceBertScorer(AbsScorer):
 
                 if len(list_candidates) > 0:                
                     rst_tmp = self.embedding_batch(list_inputText[start_index:start_index+MAX_BATCH_SENTENCEBERT], contextual=contextual)
-                    rst = rst + rst_tmp
+                    if isinstance(rst_tmp, torch.Tensor):
+                        rst = torch.cat((rst, rst_tmp), dim=0)
+                    else:
+                        rst = rst + rst_tmp
 
             return rst
 

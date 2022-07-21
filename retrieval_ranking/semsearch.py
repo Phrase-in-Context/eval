@@ -98,6 +98,9 @@ class SemanticSearch(AbsSearch):
         else:
             self.list_oracle.clear()
 
+            if gt_sent_idx == -1:
+                return []
+
             answer_tokens = [token.text.lower() for token in self.nlp.tokenizer(list(set_oracle)[0])]
             if answer_tokens == ['u.k', '.', 'branch']:
                 answer_tokens = ['u.k.', 'branch']

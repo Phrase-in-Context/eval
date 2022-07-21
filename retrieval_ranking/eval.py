@@ -88,11 +88,10 @@ def export_results(eval_results, run_results, outdir, contextual):
         f.write(str(eval_results["MRR@5"]) + "\t")
 
 
-def extract_context_for_oracle(context, answer):
+def extract_context_for_oracle(sentences, answer):
     gt_sentence = ""
-    gt_sentence_idx = 0
+    gt_sentence_idx = -1
 
-    sentences = tokenizer.tokenize(context)
     for idx, sentence in enumerate(sentences):
         if answer.strip().lower() in sentence.strip().lower():
             gt_sentence = sentence
@@ -124,7 +123,7 @@ def run_eval(args, system, examples):
         if args.oracle_candidates:
             logger.debug("ADD ORACLES: %s", answers)
             if args.contextual:
-                gt_sentence, gt_sentence_idx = extract_context_for_oracle(example['context'], answers[0])
+                gt_sentence, gt_sentence_idx = extract_context_for_oracle(system.sentences, answers[0])
                 system.add_oracles(set(answers), gt_sentence, gt_sentence_idx)
             else:
                 system.add_oracles(set(answers))

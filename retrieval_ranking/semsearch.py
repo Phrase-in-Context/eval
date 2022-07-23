@@ -153,16 +153,16 @@ class SemanticSearch(AbsSearch):
     query: query to be compared
     top_n: number of results 
     '''
-    def search(self, query, top_n=10, window_size=0):
+    def search(self, query, phrases=None, top_n=10, window_size=0):
         """ """
         self.logger.debug('number of candidates: %d', len(self.phrases))
 
         # apply scorer
         if hasattr(self.scorer.__class__, 'score_batch') and callable(getattr(self.scorer.__class__, 'score_batch')):
-            phrases = list(self.phrases)
-            
-            if len(phrases) == 0:
-                phrases = ['NA']
+            if phrases is None:
+                phrases = list(self.phrases)
+                if len(phrases) == 0:
+                    phrases = ['NA']
 
             if not self.contextual:
                 scores = self.scorer.score_batch(query, phrases, self.list_oracle)
@@ -183,22 +183,16 @@ class SemanticSearch(AbsSearch):
         
         return results
 
-    '''
-    desc       : compute matching scores between query and phrase
-    query      : query to be compared
-    list_phrase: phrases to be comapred with query
-    '''
-    def match(self, query, list_phrases):
+    def search_for_demo(self, query, phrases, top_n=10):
+        """ """
+        self.logger.debug('number of candidates: %d', len(phrases))
 
-        self.logger.debug('number of candidates: %d', len(list_phrases))
+        # apply scorer
+        phrases_only = [phrase for phrase, _ in phrases]
+        scores = self.scorer.score_batch(query, phrases_only)
+        results = [{"phrase": phrase, "score": score} for phrase, score in zip(phrases, scores)]
 
-        # Apply scorer
-        if hasattr(self.scorer.__class__, 'score_batch') and callable(getattr(self.scorer.__class__, 'score_batch')):
-            scores = self.scorer.score_batch(query, list_phrases)
-            results = [{"phrase": phrase, "score": score} for phrase, score in zip(list_phrases, scores)]
-        else:
-            results = [{"phrase": phrase, "score": self.scorer.score(query, phrase)} for phrase in list_phrases]
-
-        results = sorted(results, reverse=True, key=lambda x: x['score'])
+        results = sorted(results, reverse=True, key=lambda x: x['score'])[:top_n]
 
         return results
+

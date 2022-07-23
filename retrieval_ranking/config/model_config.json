@@ -57,7 +57,7 @@
     },
     {
         "scorer":"PhraseBERT",
-        "model_fpath":"../results/phrase_retrieval/PR-pass/qa/whaleloops/phrase-bert/finetuned",
+        "model_fpath":"models/phrase-bert-qa",
         "scorer_type":"phrase-bert-qa"
     },
     {
@@ -69,5 +69,10 @@
         "scorer":"SimCSE",
         "model_fpath":"./results/phrase_retrieval/PR-pass/qa/princeton-nlp/sup-simcse-bert-base-uncased/finetuned",
         "scorer_type":"sup-simcse-bert-base-uncased-qa"
+    },
+    {
+        "scorer":"Longformer",
+        "model_fpath":"models/longformer-base-4096",
+        "scorer_type":"allenai/longformer-base-4096"
     }
 ]

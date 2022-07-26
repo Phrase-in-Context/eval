@@ -128,9 +128,48 @@ Phrase in Context is a curated benchmark for phrase understanding and semantic s
 
 ### 1. Reproduce results for benchmark
 
+#### 1.1 PS: Phrase Similarity
+
+Change directory to the `similarity` folder
+```
+cd similarty/
+```
+
+##### Approach 1: Cosine Similarity
+
+```
+bash run_eval_ranking.sh
+```
+
+##### Approach 2: BERT-based classifiers
+
+```
+bash run_eval_cls.sh
+```
+
+Please note that the default setting is non-contextualized phrase embeddings. 
+For the contextualized setting, we need to uncomment the argumnet `--contextual` before calling the script.
+
+The results are stored under the folder `../results/phrase_similarity`
+
+#### 1.2 PR: Phrase Retrieval
+
+##### Approach 1: Similarity-based Ranking
 
 
-### 2. Evaluate your own models
+
+##### Approach 2: Question Answering retrieval system 
+
+
+
+#### 1.3 PSD: Phrase Sense Disambiguation
+
+
+
+##### Approach 2: Question Answering retrieval system 
+
+
+<!-- ### 2. Evaluate your own models -->
 
 
 

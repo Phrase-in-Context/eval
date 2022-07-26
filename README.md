@@ -40,11 +40,8 @@
   -->
 
 
-  <h1 align="center">Official implementation for the paper</h1>
-
+  <h1 align="center"><a href="https://arxiv.org/abs/2207.09068">PiC: A Phrase-in-Context Dataset for Phrase Understanding and Semantic Search</a></h1>
   <p align="center">
-    <a href="https://arxiv.org/abs/2207.09068">PiC: A Phrase-in-Context Dataset for Phrase Understanding and Semantic Search</a>
-    <br />
     Thang Pham, Seunghyun Yoon, Trung Bui, Anh Nguyen (2022).
   </p>
 

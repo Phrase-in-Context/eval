@@ -76,6 +76,8 @@ Phrase in Context is a curated benchmark for phrase understanding and semantic s
 
 :star2: Official implementation to reproduce most of the main results in our paper [PiC: A Phrase-in-Context Dataset for Phrase Understanding and Semantic Search](https://arxiv.org/abs/2207.09068).
 
+:star2: Project Link: [https://phrase-in-context.github.io/](https://phrase-in-context.github.io/)
+
 :star2: **Online web demo**: https://aub.ie/phrase-search
 
 **If you use this software, please consider citing:**
@@ -176,8 +178,6 @@ Distributed under the MIT License. See `LICENSE.txt` for more information.
 
 The entire code was done and maintained by Thang Pham, [@pmthangxai](https://twitter.com/pmthangxai) - tmp0038@auburn.edu.
 Contact us via email or create github issues if you have any questions/requests. Thanks!
-
-Project Link: [https://github.com/Phrase-in-Context/eval](https://github.com/Phrase-in-Context/eval)
 
 
 <!-- ACKNOWLEDGMENTS -->

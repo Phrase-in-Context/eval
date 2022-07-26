@@ -45,7 +45,8 @@
   </p>
 </div>
 
-:star2: Official implementation for the paper [PiC: A Phrase-in-Context Dataset for Phrase Understanding and Semantic Search](https://arxiv.org/abs/2207.09068)
+:star2: Official implementation of paper [PiC: A Phrase-in-Context Dataset for Phrase Understanding and Semantic Search](https://arxiv.org/abs/2207.09068)
+
 :star2: **Online web demo**: https://aub.ie/phrase-search
 
 <!-- TABLE OF CONTENTS -->

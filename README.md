@@ -103,7 +103,7 @@ Phrase in Context is a curated benchmark for phrase understanding and semantic s
 
    ```sh
    mkdir phrase-in-context && cd "$_"
-   git clone git@github.com:Phrase-in-Context/eval.git && cd eval
+   git clone https://github.com/Phrase-in-Context/eval.git && cd eval
    ```
 
 2. Create and activate a Conda environment

@@ -39,15 +39,14 @@
   </a>
   -->
 
-
-  <h1 align="center"><a href="https://arxiv.org/abs/2207.09068">PiC: A Phrase-in-Context Dataset for Phrase Understanding and Semantic Search</a></h1>
+  <h1 align="center">PiC: A Phrase-in-Context Dataset for Phrase Understanding and Semantic Search</h1>
   <p align="center">
     Thang Pham, Seunghyun Yoon, Trung Bui, Anh Nguyen (2022).
   </p>
-
 </div>
 
-
+:star2: Official implementation for the paper [PiC: A Phrase-in-Context Dataset for Phrase Understanding and Semantic Search](https://arxiv.org/abs/2207.09068)
+:star2: **Online web demo**: https://aub.ie/phrase-search
 
 <!-- TABLE OF CONTENTS -->
 
@@ -79,8 +78,6 @@
 ## About The Project
 
 Phrase in Context is a curated benchmark for phrase understanding and semantic search, consisting of three tasks of increasing difficulty: Phrase Similarity (PS), Phrase Retrieval (PR) and Phrase Sense Disambiguation (PSD). The datasets are annotated by 13 linguistic experts on Upwork and verified by two groups: ~1000 AMT crowdworkers and another set of 5 linguistic experts. PiC benchmark is distributed under CC-BY-NC 4.0.
-
-:star2: **Online web demo**: https://aub.ie/phrase-search OR http://phrase-retrieval.cse.eng.auburn.edu:5007
 
 This repository contains source code necessary to reproduce most of the main results in our paper.
 

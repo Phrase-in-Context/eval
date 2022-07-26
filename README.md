@@ -45,10 +45,6 @@
   </p>
 </div>
 
-:star2: Official implementation of paper [PiC: A Phrase-in-Context Dataset for Phrase Understanding and Semantic Search](https://arxiv.org/abs/2207.09068)
-
-:star2: **Online web demo**: https://aub.ie/phrase-search
-
 <!-- TABLE OF CONTENTS -->
 
 <details open>
@@ -72,15 +68,15 @@
 </details>
 
 
-
-
 <!-- ABOUT THE PROJECT -->
 
 ## About The Project
 
 Phrase in Context is a curated benchmark for phrase understanding and semantic search, consisting of three tasks of increasing difficulty: Phrase Similarity (PS), Phrase Retrieval (PR) and Phrase Sense Disambiguation (PSD). The datasets are annotated by 13 linguistic experts on Upwork and verified by two groups: ~1000 AMT crowdworkers and another set of 5 linguistic experts. PiC benchmark is distributed under CC-BY-NC 4.0.
 
-This repository contains source code necessary to reproduce most of the main results in our paper.
+:star2: Official implementation to reproduce most of the main results in our paper [PiC: A Phrase-in-Context Dataset for Phrase Understanding and Semantic Search](https://arxiv.org/abs/2207.09068).
+
+:star2: **Online web demo**: https://aub.ie/phrase-search
 
 **If you use this software, please consider citing:**
 

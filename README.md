@@ -150,7 +150,7 @@ For the **contextualized** setting, we need to uncomment the argumnet `--context
 
 The results are stored under the folder `../results/phrase_similarity`
 
-## 1.2 PR: Phrase Retrieval
+## 2. PR: Phrase Retrieval
 
 ### Approach 1: Similarity-based Ranking
 
@@ -160,10 +160,10 @@ The results are stored under the folder `../results/phrase_similarity`
 
 
 
-## 1.3 PSD: Phrase Sense Disambiguation
+## 3. PSD: Phrase Sense Disambiguation
 
 
-### Approach 2: Question Answering retrieval system 
+### Approach 1: Question Answering retrieval system 
 
 
 <!-- ### 2. Evaluate your own models -->

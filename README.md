@@ -158,10 +158,10 @@ bash run_eval_cls.sh
 
 Change directory to the `retrieval_qa` folder
 ```
-cd retrieval/
+cd retrieval_qa/
 ```
 
-Train Q/A model on PR dataset (PR-pass or PR-page)
+First, we train a Q/A model (e.g., BERT-base) on one of two versions of PR dataset: PR-pass or PR-page
 ```
 export DATASET="phrase_retrieval"
 export DATASET_CONFIG="PR-pass"
@@ -172,19 +172,27 @@ bash train_qa.sh finetune_model ${DATASET} ${DATASET_CONFIG} ${MODEL}
 * `DATASET_CONFIG` can be exported to the followings: `PR-pass` or `PR-page`
 * `MODEL` can be exported to the followings: : `BERT-base`, `BERT-large`, `PhraseBERT`, `SpanBERT`, `SentenceBERT`, `SimCSE`, `Longformer-base` and `Longformer-large`.
 
-Evaluate Q/A model on PR dataset (PR-pass or PR-page)
+Then, we evaluate the newly trained Q/A model as follows
+```
+bash eval_qa.sh evaluate_model ${DATASET} ${DATASET_CONFIG} ${MODEL}
+```
+
 
 ### 3. PSD: Phrase Sense Disambiguation
 
 #### Approach 1: Question Answering retrieval system 
 
-Training and evaluating a Q/A model on PSD dataset is quite similar to PR. All we need is to update the dataset and its config as follows and keep the rest part unchanged.
+Training and evaluating a Q/A model on PSD dataset is quite similar to PR's approach 2. All we need is to update the dataset and its config as follows and keep the rest part unchanged.
 ```
 export DATASET="phrase_sense_disambiguation"
 export DATASET_CONFIG=""
 export MODEL="BERT-base"
 
+# For training
 bash train_qa.sh finetune_model ${DATASET} ${DATASET_CONFIG} ${MODEL}
+
+# For evaluation
+bash eval_qa.sh evaluate_model ${DATASET} ${DATASET_CONFIG} ${MODEL}
 ```
 * `DATASET_CONFIG` can only be exported to an empty string `""` since PSD has only one version. Regarding `MODEL`, you can follow the provided list in the PR section to train and evaluate other models.
 

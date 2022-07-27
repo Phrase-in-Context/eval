@@ -76,7 +76,6 @@ Phrase in Context is a curated benchmark for phrase understanding and semantic s
 
 [![PiC example][pic-sample]](https://github.com/Phrase-in-Context/eval/)
 
-
 :star2: Official implementation to reproduce most of the main results in our paper [PiC: A Phrase-in-Context Dataset for Phrase Understanding and Semantic Search](https://arxiv.org/abs/2207.09068).
 
 :sun_with_face: **Project Link**: [https://phrase-in-context.github.io/](https://phrase-in-context.github.io/)
@@ -296,4 +295,4 @@ Contact us via email or create github issues if you have any questions/requests.
 [license-url]: https://github.com/Phrase-in-Context/eval/blob/master/LICENSE.txt
 [linkedin-shield]: https://img.shields.io/badge/-LinkedIn-black.svg?style=for-the-badge&logo=linkedin&colorB=555
 [linkedin-url]: https://linkedin.com/in/thangpm
-[pic-example]: images/pic_sample.png
+[pic-sample]: images/pic_sample.png

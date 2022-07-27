@@ -76,9 +76,9 @@ Phrase in Context is a curated benchmark for phrase understanding and semantic s
 
 :star2: Official implementation to reproduce most of the main results in our paper [PiC: A Phrase-in-Context Dataset for Phrase Understanding and Semantic Search](https://arxiv.org/abs/2207.09068).
 
-:star2: Project Link: [https://phrase-in-context.github.io/](https://phrase-in-context.github.io/)
+:sun_with_face: **Project Link**: [https://phrase-in-context.github.io/](https://phrase-in-context.github.io/)
 
-:star2: **Online web demo**: https://aub.ie/phrase-search
+:fire: **Online Web Demo**: https://aub.ie/phrase-search
 
 **If you use our PiC dataset or software, please consider citing:**
 

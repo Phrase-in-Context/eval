@@ -52,31 +52,41 @@ function run() {
     params+=(--context_window "${CONTEXT_WINDOW}")
   fi
 
-  if [[ ${DEBUG} == "True" ]]; then
-    params+=(--debug)
-  fi
-
   echo "${params[@]}"
   nohup python eval.py "${params[@]}" > ${OUTPUT_DIR}/eval_logs.txt &
 }
 
-dataset=phrase_retrieval
-data_subset=PR-pass
-extractor=ngrams
-max_seq_len=256
+function evaluate_model() {
+  local DATASET=$1
+  local DATASET_CONFIG=$2
+  local MODEL=$3
+  local CONTEXTUAL=$4
 
-oracle=True
-contextual=True
-DEBUG=False
+  local EXTRACTOR=ngrams
+  local MAX_SEQ_LENGTH=256
+  local OUTPUT_DIR=../results
+  local ORACLE=True
+
+  if [[ ${MODEL} == "BERT-base" ]]; then
+    run ${DATASET} "${DATASET_CONFIG}" "${EXTRACTOR}" 2 3 BERT "bert-base-uncased" 256 "${ORACLE}" "${CONTEXTUAL}" -1 0
+  elif [[ ${MODEL} == "BERT-large" ]]; then
+    run ${DATASET} "${DATASET_CONFIG}" "${EXTRACTOR}" 2 3 BERT "bert-large-uncased" 256 "${ORACLE}" "${CONTEXTUAL}" -1 0
+  elif [[ ${MODEL} == "PhraseBERT" ]]; then
+    run ${DATASET} "${DATASET_CONFIG}" "${EXTRACTOR}" 2 3 PhraseBERT "whaleloops/phrase-bert" 128 "${ORACLE}" "${CONTEXTUAL}" -1 0
+  elif [[ ${MODEL} == "SpanBERT" ]]; then
+    run ${DATASET} "${DATASET_CONFIG}" "${EXTRACTOR}" 2 3 SpanBERT "SpanBERT/spanbert-base-cased" 256 "${ORACLE}" "${CONTEXTUAL}" -1 0
+  elif [[ ${MODEL} == "SentenceBERT" ]]; then
+    run ${DATASET} "${DATASET_CONFIG}" "${EXTRACTOR}" 2 3 SentenceBERT "sentence-transformers/bert-base-nli-stsb-mean-tokens" 128 "${ORACLE}" "${CONTEXTUAL}" -1 0
+  elif [[ ${MODEL} == "SimCSE" ]]; then
+    run ${DATASET} "${DATASET_CONFIG}" "${EXTRACTOR}" 2 3 SimCSE "princeton-nlp/sup-simcse-bert-base-uncased" 256 "${ORACLE}" "${CONTEXTUAL}" -1 0
+  elif [[ ${MODEL} == "USE" ]]; then
+    run ${DATASET} "${DATASET_CONFIG}" "${EXTRACTOR}" 2 3 USE "use-v5" 256 "${ORACLE}" "${CONTEXTUAL}" -1 0
+  fi
+}
+
+# ThangPM: DensePhrase will be supported later
+#run ${DATASET} "${DATASET_CONFIG}" "${EXTRACTOR}" 2 3 DensePhrases "princeton-nlp/densephrases-multi-query-multi" 256 "${ORACLE}" "${CONTEXTUAL}" -1 0
 
 
-run ${dataset} "${data_subset}" "${extractor}" 2 3 BERT "bert-base-uncased" "${max_seq_len}" "${oracle}" "${contextual}" -1 0
-run ${dataset} "${data_subset}" "${extractor}" 2 3 BERT "bert-large-uncased" "${max_seq_len}" "${oracle}" "${contextual}" -1 1
-run ${dataset} "${data_subset}" "${extractor}" 2 3 SentenceBERT "sentence-transformers/bert-base-nli-stsb-mean-tokens" 128 "${oracle}" "${contextual}" -1 2
-run ${dataset} "${data_subset}" "${extractor}" 2 3 PhraseBERT "whaleloops/phrase-bert" 128 "${oracle}" "${contextual}" -1 3
-run ${dataset} "${data_subset}" "${extractor}" 2 3 SpanBERT "SpanBERT/spanbert-base-cased" "${max_seq_len}" "${oracle}" "${contextual}" -1 4
-run ${dataset} "${data_subset}" "${extractor}" 2 3 DensePhrases "princeton-nlp/densephrases-multi-query-multi" "${max_seq_len}" "${oracle}" "${contextual}" -1 5
-run ${dataset} "${data_subset}" "${extractor}" 2 3 SimCSE "princeton-nlp/sup-simcse-bert-base-uncased" "${max_seq_len}" "${oracle}" "${contextual}" -1 6
-run ${dataset} "${data_subset}" "${extractor}" 2 3 USE "use-v5" "${max_seq_len}" "${oracle}" "${contextual}" -1 7
 
 

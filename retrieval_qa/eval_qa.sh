@@ -37,24 +37,51 @@ function eval_qa() {
   nohup python -u run_qa.py "${params[@]}" > $OUTPUT_DIR/predict_logs.txt &
 }
 
-function do_evaluation() {
+function evaluate_all() {
   echo "*** EVALUATION STARTED ***"
 
   local DATASET="phrase_retrieval"   # ["phrase_retrieval", "phrase_sense_disambiguation"]
-  local DATASET_CONFIG="PR-pass"                       # "PR-pass" OR "PR-page" for "phrase_retrieval" else ""
+  local DATASET_CONFIG="PR-pass"     # "PR-pass" OR "PR-page" for "phrase_retrieval" else ""
   local OUTPUT_DIR=../results
   local RANDOM_SEED=42
 
   eval_qa bert-base-uncased "${DATASET}" "${DATASET_CONFIG}" "${OUTPUT_DIR}" 8 "${RANDOM_SEED}" 512 0
   eval_qa bert-large-uncased "${DATASET}" "${DATASET_CONFIG}" "${OUTPUT_DIR}" 8 "${RANDOM_SEED}" 512 1
-#  eval_qa allenai/longformer-base-4096 "${DATASET}" "${DATASET_CONFIG}" "${OUTPUT_DIR}" 2 "${RANDOM_SEED}" 4096 2
-#  eval_qa allenai/longformer-large-4096 "${DATASET}" "${DATASET_CONFIG}" "${OUTPUT_DIR}" 1 "${RANDOM_SEED}" 4096 3
+  eval_qa allenai/longformer-base-4096 "${DATASET}" "${DATASET_CONFIG}" "${OUTPUT_DIR}" 2 "${RANDOM_SEED}" 4096 2
+  eval_qa allenai/longformer-large-4096 "${DATASET}" "${DATASET_CONFIG}" "${OUTPUT_DIR}" 1 "${RANDOM_SEED}" 4096 3
   eval_qa sentence-transformers/bert-base-nli-stsb-mean-tokens "${DATASET}" "${DATASET_CONFIG}" "${OUTPUT_DIR}" 8 "${RANDOM_SEED}" 512 4
   eval_qa whaleloops/phrase-bert "${DATASET}" "${DATASET_CONFIG}" "${OUTPUT_DIR}" 8 "${RANDOM_SEED}" 512 5
   eval_qa SpanBERT/spanbert-base-cased "${DATASET}" "${DATASET_CONFIG}" "${OUTPUT_DIR}" 8 "${RANDOM_SEED}" 512 6
   eval_qa princeton-nlp/sup-simcse-bert-base-uncased "${DATASET}" "${DATASET_CONFIG}" "${OUTPUT_DIR}" 8 "${RANDOM_SEED}" 512 7
 }
 
-do_evaluation
+function evaluate_model() {
+  local DATASET=$1
+  local DATASET_CONFIG=$2
+  local MODEL=$3
+
+  local OUTPUT_DIR=../results
+  local RANDOM_SEED=42
+
+  if [[ ${MODEL} == "BERT-base" ]]; then
+    eval_qa bert-base-uncased "${DATASET}" "${DATASET_CONFIG}" "${OUTPUT_DIR}" 8 "${RANDOM_SEED}" 512 0
+  elif [[ ${MODEL} == "BERT-large" ]]; then
+    eval_qa bert-large-uncased "${DATASET}" "${DATASET_CONFIG}" "${OUTPUT_DIR}" 8 "${RANDOM_SEED}" 512 0
+  elif [[ ${MODEL} == "PhraseBERT" ]]; then
+    eval_qa whaleloops/phrase-bert "${DATASET}" "${DATASET_CONFIG}" "${OUTPUT_DIR}" 8 "${RANDOM_SEED}" 512 0
+  elif [[ ${MODEL} == "SpanBERT" ]]; then
+    eval_qa SpanBERT/spanbert-base-cased "${DATASET}" "${DATASET_CONFIG}" "${OUTPUT_DIR}" 8 "${RANDOM_SEED}" 512 0
+  elif [[ ${MODEL} == "SentenceBERT" ]]; then
+    eval_qa sentence-transformers/bert-base-nli-stsb-mean-tokens "${DATASET}" "${DATASET_CONFIG}" "${OUTPUT_DIR}" 8 "${RANDOM_SEED}" 512 0
+  elif [[ ${MODEL} == "SimCSE" ]]; then
+    eval_qa princeton-nlp/sup-simcse-bert-base-uncased "${DATASET}" "${DATASET_CONFIG}" "${OUTPUT_DIR}" 8 "${RANDOM_SEED}" 512 0
+  elif [[ ${MODEL} == "Longformer-base" ]]; then
+    eval_qa allenai/longformer-base-4096 "${DATASET}" "${DATASET_CONFIG}" "${OUTPUT_DIR}" 2 "${RANDOM_SEED}" 4096 0
+  elif [[ ${MODEL} == "Longformer-large" ]]; then
+    eval_qa allenai/longformer-large-4096 "${DATASET}" "${DATASET_CONFIG}" "${OUTPUT_DIR}" 1 "${RANDOM_SEED}" 4096 0
+  fi
+}
+
+#evaluate_all
 
 

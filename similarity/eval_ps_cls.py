@@ -21,11 +21,9 @@ from cls_utils import ParaphraseDataset, ProbingModel, get_data_emb
 import argparse
 from os.path import exists
 from os import makedirs
-import wandb
 
 
 def main(args):
-    # wandb.init(project='eval_ps_cls')
 
     device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
 

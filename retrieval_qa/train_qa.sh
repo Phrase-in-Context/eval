@@ -19,7 +19,6 @@ function train_qa() {
   params=()
   params+=(--do_train)
   params+=(--num_train_epochs 2.0)
-#  params+=(--save_steps 100000)
 
   params+=(--model_name_or_path "${MODEL_BASE}")
   params+=(--do_eval)
@@ -42,22 +41,15 @@ function train_qa() {
   params+=(--report_to wandb)
   params+=(--run_name "${DATASET}"/"${DATASET_CONFIG}"/qa/"${MODEL_BASE}"/finetuned)
 
-#  Default hyperparameters
-#  eval_steps=logging_steps
-#  save_strategy="steps"
-#  save_steps=500
-#  logging_strategy="steps"
-#  logging_steps=500
-
   echo "${params[@]}"
   nohup python -u run_qa.py "${params[@]}" > $OUTPUT_DIR/finetune_logs.txt &
 }
 
-function do_finetuning() {
+function finetune_all() {
   echo "*** FINETUNING STARTED ***"
 
   local DATASET="phrase_retrieval"  # ["phrase_retrieval", "phrase_sense_disambiguation"]
-  local DATASET_CONFIG="PR-pass"                      # "PR-pass" OR "PR-page" for "phrase_retrieval" else ""
+  local DATASET_CONFIG="PR-pass"    # "PR-pass" OR "PR-page" for "phrase_retrieval" else ""
   local OUTPUT_DIR=../results
   local RANDOM_SEED=42
 
@@ -71,6 +63,33 @@ function do_finetuning() {
   train_qa princeton-nlp/sup-simcse-bert-base-uncased "${DATASET}" "${DATASET_CONFIG}" "${OUTPUT_DIR}" 8 8 "${RANDOM_SEED}" 512 7
 }
 
-do_finetuning
+function finetune_model() {
+  local DATASET=$1
+  local DATASET_CONFIG=$2
+  local MODEL=$3
+
+  local OUTPUT_DIR=../results
+  local RANDOM_SEED=42
+
+  if [[ ${MODEL} == "BERT-base" ]]; then
+    train_qa bert-base-uncased "${DATASET}" "${DATASET_CONFIG}" "${OUTPUT_DIR}" 8 8 "${RANDOM_SEED}" 512 0
+  elif [[ ${MODEL} == "BERT-large" ]]; then
+    train_qa bert-large-uncased "${DATASET}" "${DATASET_CONFIG}" "${OUTPUT_DIR}" 8 8 "${RANDOM_SEED}" 512 0
+  elif [[ ${MODEL} == "PhraseBERT" ]]; then
+    train_qa whaleloops/phrase-bert "${DATASET}" "${DATASET_CONFIG}" "${OUTPUT_DIR}" 8 8 "${RANDOM_SEED}" 512 0
+  elif [[ ${MODEL} == "SpanBERT" ]]; then
+    train_qa SpanBERT/spanbert-base-cased "${DATASET}" "${DATASET_CONFIG}" "${OUTPUT_DIR}" 8 8 "${RANDOM_SEED}" 512 0
+  elif [[ ${MODEL} == "SentenceBERT" ]]; then
+    train_qa sentence-transformers/bert-base-nli-stsb-mean-tokens "${DATASET}" "${DATASET_CONFIG}" "${OUTPUT_DIR}" 8 8 "${RANDOM_SEED}" 512 0
+  elif [[ ${MODEL} == "SimCSE" ]]; then
+    train_qa princeton-nlp/sup-simcse-bert-base-uncased "${DATASET}" "${DATASET_CONFIG}" "${OUTPUT_DIR}" 8 8 "${RANDOM_SEED}" 512 0
+  elif [[ ${MODEL} == "Longformer-base" ]]; then
+    train_qa allenai/longformer-base-4096 "${DATASET}" "${DATASET_CONFIG}" "${OUTPUT_DIR}" 2 2 "${RANDOM_SEED}" 4096 0
+  elif [[ ${MODEL} == "Longformer-large" ]]; then
+    train_qa allenai/longformer-large-4096 "${DATASET}" "${DATASET_CONFIG}" "${OUTPUT_DIR}" 1 1 "${RANDOM_SEED}" 4096 0
+  fi
+}
+
+#finetune_all
 
 

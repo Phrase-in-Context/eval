@@ -1,5 +1,5 @@
 
-export CUDA_VISIBLE_DEVICES=1
+export CUDA_VISIBLE_DEVICES=0
 
 python -u eval_ps_cls.py \
 --full_run_mode \

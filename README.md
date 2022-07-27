@@ -70,7 +70,7 @@
 
 <!-- ABOUT THE PROJECT -->
 
-# About The Project
+## About The Project
 
 Phrase in Context is a curated benchmark for phrase understanding and semantic search, consisting of three tasks of increasing difficulty: Phrase Similarity (PS), Phrase Retrieval (PR) and Phrase Sense Disambiguation (PSD). The datasets are annotated by 13 linguistic experts on Upwork and verified by two groups: ~1000 AMT crowdworkers and another set of 5 linguistic experts. PiC benchmark is distributed under [CC-BY-NC 4.0](https://creativecommons.org/licenses/by-nc/4.0/).
 
@@ -91,15 +91,15 @@ Phrase in Context is a curated benchmark for phrase understanding and semantic s
 
 <!-- GETTING STARTED -->
 
-# Getting Started
+## Getting Started
 
-## Prerequisites
+### Prerequisites
 
 * Anaconda 4.10 or higher
 * Python 3.9 or higher
 * pip version 21 or higher
 
-## Installation
+### Installation
 
 1. Create a new folder and clone the repo
 
@@ -124,22 +124,22 @@ Phrase in Context is a curated benchmark for phrase understanding and semantic s
 
 <!-- USAGE EXAMPLES -->
 
-# Reproduce results for benchmark
+## Reproduce results for benchmark
 
-## 1. PS: Phrase Similarity
+### 1. PS: Phrase Similarity
 
 Change directory to the `similarity` folder
 ```
 cd similarity/
 ```
 
-### Approach 1: Cosine Similarity
+#### Approach 1: Cosine Similarity
 
 ```
 bash run_eval_ranking.sh
 ```
 
-### Approach 2: BERT-based classifiers
+#### Approach 2: BERT-based classifiers
 
 ```
 bash run_eval_cls.sh
@@ -150,20 +150,20 @@ For the **contextualized** setting, we need to uncomment the argumnet `--context
 
 The results are stored under the folder `../results/phrase_similarity`
 
-## 2. PR: Phrase Retrieval
+### 2. PR: Phrase Retrieval
 
-### Approach 1: Similarity-based Ranking
-
-
-
-### Approach 2: Question Answering retrieval system 
+#### Approach 1: Similarity-based Ranking
 
 
 
-## 3. PSD: Phrase Sense Disambiguation
+#### Approach 2: Question Answering retrieval system 
 
 
-### Approach 1: Question Answering retrieval system 
+
+### 3. PSD: Phrase Sense Disambiguation
+
+
+#### Approach 1: Question Answering retrieval system 
 
 
 <!-- ### 2. Evaluate your own models -->

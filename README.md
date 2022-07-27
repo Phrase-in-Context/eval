@@ -80,7 +80,7 @@ Phrase in Context is a curated benchmark for phrase understanding and semantic s
 
 :star2: **Online web demo**: https://aub.ie/phrase-search
 
-**If you use this software, please consider citing:**
+**If you use our PiC dataset or software, please consider citing:**
 
     @article{pham2022PiC,
       title={PiC: A Phrase-in-Context Dataset for Phrase Understanding and Semantic Search},

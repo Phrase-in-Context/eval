@@ -145,10 +145,8 @@ bash run_eval_ranking.sh
 bash run_eval_cls.sh
 ```
 
-Please note that the default setting is **non-contextualized** phrase embeddings. 
-For the **contextualized** setting, we need to uncomment the argumnet `--contextual` before calling the script.
-
-The results are stored under the folder `../results/phrase_similarity`
+* Please note that the default setting is **non-contextualized** phrase embeddings. For the **contextualized** setting, we need to uncomment the argumnet `--contextual` in the script.
+* The results are stored under the folder `../results/phrase_similarity`
 
 ### 2. PR: Phrase Retrieval
 

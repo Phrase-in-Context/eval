@@ -145,7 +145,7 @@ bash run_eval_ranking.sh
 bash run_eval_cls.sh
 ```
 
-* Please note that the default setting is **non-contextualized** phrase embeddings. For the **contextualized** setting, we need to uncomment the argumnet `--contextual` in the script.
+* Please note that the default setting for both approaches is **non-contextualized** phrase embeddings. For the **contextualized** setting, we need to uncomment the argumnet `--contextual` in the script.
 * The results are stored under the folder `../results/phrase_similarity`
 
 ### 2. PR: Phrase Retrieval
@@ -156,13 +156,37 @@ bash run_eval_cls.sh
 
 #### Approach 2: Question Answering retrieval system 
 
+Change directory to the `retrieval_qa` folder
+```
+cd retrieval/
+```
 
+Train Q/A model on PR dataset (PR-pass or PR-page)
+```
+export DATASET="phrase_retrieval"
+export DATASET_CONFIG="PR-pass"
+export MODEL="BERT-base"
+
+bash train_qa.sh finetune_model ${DATASET} ${DATASET_CONFIG} ${MODEL}
+```
+* `DATASET_CONFIG` can be exported to the followings: `PR-pass` or `PR-page`
+* `MODEL` can be exported to the followings: : `BERT-base`, `BERT-large`, `PhraseBERT`, `SpanBERT`, `SentenceBERT`, `SimCSE`, `Longformer-base` and `Longformer-large`.
+
+Evaluate Q/A model on PR dataset (PR-pass or PR-page)
 
 ### 3. PSD: Phrase Sense Disambiguation
 
-
 #### Approach 1: Question Answering retrieval system 
 
+Training and evaluating a Q/A model on PSD dataset is quite similar to PR. All we need is to update the dataset and its config as follows and keep the rest part unchanged.
+```
+export DATASET="phrase_sense_disambiguation"
+export DATASET_CONFIG=""
+export MODEL="BERT-base"
+
+bash train_qa.sh finetune_model ${DATASET} ${DATASET_CONFIG} ${MODEL}
+```
+* `DATASET_CONFIG` can only be exported to an empty string `""` since PSD has only one version. Regarding `MODEL`, you can follow the provided list in the PR section to train and evaluate other models.
 
 <!-- ### 2. Evaluate your own models -->
 

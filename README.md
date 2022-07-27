@@ -152,7 +152,21 @@ bash run_eval_cls.sh
 
 #### Approach 1: Similarity-based Ranking
 
+Change directory to the `retrieval_ranking` folder
+```
+cd retrieval_ranking/
+```
 
+For this approach, we do not train the models. Instead, we evaluate them by comparing the phrase representations of a query with that of phrase candidates encoded by the models' encoders.
+```
+export DATASET="phrase_retrieval"
+export DATASET_CONFIG="PR-pass"
+export MODEL="BERT-base"
+export CONTEXTUAL=False     # Set it to True for contextualized setting
+
+bash run_eval.sh evaluate_model ${DATASET} ${DATASET_CONFIG} ${MODEL} ${CONTEXTUAL}
+```
+* Note that the default setting is **non-contextualized** phrase embeddings. For the **contextualized** setting, we need to change the export value of `CONTEXTUAL` to **True**.
 
 #### Approach 2: Question Answering retrieval system 
 
@@ -176,7 +190,7 @@ Then, we evaluate the newly trained Q/A model as follows
 ```
 bash eval_qa.sh evaluate_model ${DATASET} ${DATASET_CONFIG} ${MODEL}
 ```
-
+* The results of training and evaluation are stored under the folder `../results/phrase_retrieval`
 
 ### 3. PSD: Phrase Sense Disambiguation
 
@@ -195,6 +209,7 @@ bash train_qa.sh finetune_model ${DATASET} ${DATASET_CONFIG} ${MODEL}
 bash eval_qa.sh evaluate_model ${DATASET} ${DATASET_CONFIG} ${MODEL}
 ```
 * `DATASET_CONFIG` can only be exported to an empty string `""` since PSD has only one version. Regarding `MODEL`, you can follow the provided list in the PR section to train and evaluate other models.
+* The results of training and evaluation are stored under the folder `../results/phrase_sense_disambiguation`
 
 <!-- ### 2. Evaluate your own models -->
 

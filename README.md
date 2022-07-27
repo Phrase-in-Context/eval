@@ -146,7 +146,7 @@ bash run_eval_cls.sh
 ```
 
 * Please note that the default setting for both approaches is **non-contextualized** phrase embeddings. For the **contextualized** setting, we need to uncomment the argumnet `--contextual` in the script.
-* The results are stored under the folder `../results/phrase_similarity`
+* The results are stored under the folder `../results/phrase_similarity/ranking` for the first approach and `../results/phrase_similarity/classification` for the second approach.
 
 ### 2. PR: Phrase Retrieval
 
@@ -166,7 +166,11 @@ export CONTEXTUAL=False     # Set it to True for contextualized setting
 
 bash run_eval.sh evaluate_model ${DATASET} ${DATASET_CONFIG} ${MODEL} ${CONTEXTUAL}
 ```
+
 * Note that the default setting is **non-contextualized** phrase embeddings. For the **contextualized** setting, we need to change the export value of `CONTEXTUAL` to **True**.
+* `DATASET_CONFIG` can be exported to the followings: `PR-pass` or `PR-page`
+* `MODEL` can be exported to the followings: : `BERT-base`, `BERT-large`, `PhraseBERT`, `SpanBERT`, `SentenceBERT`, `SimCSE`, and `USE`.
+* The results are stored under the folder `../results/phrase_similarity/${DATASET_CONFIG}/ranking`
 
 #### Approach 2: Question Answering retrieval system 
 
@@ -183,14 +187,15 @@ export MODEL="BERT-base"
 
 bash train_qa.sh finetune_model ${DATASET} ${DATASET_CONFIG} ${MODEL}
 ```
-* `DATASET_CONFIG` can be exported to the followings: `PR-pass` or `PR-page`
-* `MODEL` can be exported to the followings: : `BERT-base`, `BERT-large`, `PhraseBERT`, `SpanBERT`, `SentenceBERT`, `SimCSE`, `Longformer-base` and `Longformer-large`.
 
 Then, we evaluate the newly trained Q/A model as follows
 ```
 bash eval_qa.sh evaluate_model ${DATASET} ${DATASET_CONFIG} ${MODEL}
 ```
-* The results of training and evaluation are stored under the folder `../results/phrase_retrieval`
+
+* `DATASET_CONFIG` can be exported to the followings: `PR-pass` or `PR-page`
+* `MODEL` can be exported to the followings: : `BERT-base`, `BERT-large`, `PhraseBERT`, `SpanBERT`, `SentenceBERT`, `SimCSE`, `Longformer-base` and `Longformer-large`.
+* The results of training and evaluation are stored under the folder `../results/phrase_similarity/${DATASET_CONFIG}/qa`
 
 ### 3. PSD: Phrase Sense Disambiguation
 
@@ -209,7 +214,7 @@ bash train_qa.sh finetune_model ${DATASET} ${DATASET_CONFIG} ${MODEL}
 bash eval_qa.sh evaluate_model ${DATASET} ${DATASET_CONFIG} ${MODEL}
 ```
 * `DATASET_CONFIG` can only be exported to an empty string `""` since PSD has only one version. Regarding `MODEL`, you can follow the provided list in the PR section to train and evaluate other models.
-* The results of training and evaluation are stored under the folder `../results/phrase_sense_disambiguation`
+* The results of training and evaluation are stored under the folder `../results/phrase_sense_disambiguation/qa`
 
 <!-- ### 2. Evaluate your own models -->
 

@@ -41,7 +41,7 @@
 
   <h1 align="center">PiC: A Phrase-in-Context Dataset for Phrase Understanding and Semantic Search</h1>
   <p align="center">
-    Thang Pham, Seunghyun Yoon, Trung Bui, Anh Nguyen (2022).
+    Joint work between Adobe Research and Auburn University: [Thang Pham](https://twitter.com/pmthangxai), [Seunghyun Yoon](https://david-yoon.github.io), [Trung Bui](https://research.adobe.com/person/trung-bui/), and [Anh Nguyen](https://anhnguyen.me).
   </p>
 </div>
 

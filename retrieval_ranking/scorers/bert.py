@@ -81,14 +81,26 @@ class BertScorer(AbsScorer):
         # Average last layer - reasonable choice (sentence-transformer)
         last_layer = hidden_states[-1]                              # [batch, seq, dim]
         unsqueeze_mask = torch.unsqueeze(list_attn_mask, dim=-1)    # [batch, seq, 1]
-        masked_last_layer = last_layer * unsqueeze_mask             # [batch, seq, dim]
+        masked_last_layer = last_layer.cpu() * unsqueeze_mask.cpu()             # [batch, seq, dim]
 
         # ThangPM
         if contextual:
+            del outputs
+            del hidden_states
+            del last_layer
+            del unsqueeze_mask
+            torch.cuda.empty_cache()
+
             return masked_last_layer                                # [batch, seq, dim]
 
-        sum_mask = torch.sum(list_attn_mask, dim=-1, keepdim=True)
+        sum_mask = torch.sum(list_attn_mask.cpu(), dim=-1, keepdim=True)
         mean_last = torch.sum(masked_last_layer, dim=1) / sum_mask
+
+        del outputs
+        del hidden_states
+        del last_layer
+        del unsqueeze_mask
+        torch.cuda.empty_cache()
     
         return mean_last                                            # [batch, dim]
 

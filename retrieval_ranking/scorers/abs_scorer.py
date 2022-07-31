@@ -25,13 +25,15 @@ class AbsScorer(object):
 
     def score_batch_contextual(self, query, list_phrase, sentences, list_oracle=None, max_seq_length=128, window_size=-1, use_context_query=True):
         """ """
-        context_phrases, new_list_phrase = [], []
-        context_queries, new_list_query = [], []
+        context_phrases, context_queries = [], []
         list_phrase = list_phrase + (list_oracle if list_oracle else [])
 
         # Prepare contextual phrases and queries for phrase embeddings
         for phrase, index, sent_idx in list_phrase:
-            tokens = [token.text.lower() for token in self.nlp.tokenizer(sentences[sent_idx])]
+            if isinstance(sentences[sent_idx], str):
+                tokens = [token.text.lower() for token in self.nlp.tokenizer(sentences[sent_idx])]
+            else:
+                tokens = sentences[sent_idx]
 
             if window_size >= 0:
                 left_context = index[0] - window_size if index[0] - window_size > 0 else 0
@@ -43,40 +45,46 @@ class AbsScorer(object):
             context_phrase = " ".join(tokens[left_context:index[0]]) + " " + phrase + " " + " ".join(tokens[index[-1] + 1:right_context])
             context_phrases.append(context_phrase.strip())
 
-            # Adjust phrase index by shifting the index to the left
-            new_index = np.array(index) - left_context
-            new_list_phrase.append((phrase, list(new_index)))
-
             if use_context_query:
                 context_query = " ".join(tokens[left_context:index[0]]) + " " + query + " " + " ".join(tokens[index[-1] + 1:right_context])
                 context_queries.append(context_query.strip())
-                query_index = np.arange(len(tokens[left_context:index[0]]), len(tokens[left_context:index[0]]) + len(query.split(" ")), 1)
-                new_list_query.append((query, list(query_index)))
 
         # Contextual phrase candidates
         context_phrase_embs = self.embed_batch(context_phrases, max_length=max_seq_length, contextual=True)
-        phrase_embs = self.extract_contextual_phrase_embeddings_with_context_window(new_list_phrase, context_phrases, context_phrase_embs, max_length=max_seq_length)
+        phrase_embs = self.extract_contextual_phrase_embeddings_with_context_window([phrase[0] for phrase in list_phrase], context_phrases, context_phrase_embs, max_length=max_seq_length)
 
         # Contextual queries
+        context_query_embs = None
         if use_context_query:
             context_query_embs = self.embed_batch(context_queries, max_length=max_seq_length, contextual=True)
-            query_emb = self.extract_contextual_phrase_embeddings_with_context_window(new_list_query, context_queries, context_query_embs, max_length=max_seq_length)
+            query_emb = self.extract_contextual_phrase_embeddings_with_context_window([query] * len(list_phrase), context_queries, context_query_embs, max_length=max_seq_length)
             score = cosine_similarity(query_emb, phrase_embs)  # [batch]
+
+            del context_query_embs
+            del query_emb
+
+            del context_phrase_embs
+            del phrase_embs
+            torch.cuda.empty_cache()
 
             # Extract scores and convert them to float since float32 is not JSON serializable
             score = [float(score[i][i]) for i in range(len(score))]
             return score
 
         # Non-contextual query
-        query_emb = self.embed_batch([query])              # [batch, dim]
+        query_emb = self.embed_batch([query])               # [batch, dim]
         score = cosine_similarity(query_emb, phrase_embs)   # [batch]
+
+        del context_phrase_embs
+        del phrase_embs
+        torch.cuda.empty_cache()
 
         return score.tolist()[-1]
 
     def extract_contextual_phrase_embeddings_with_context_window(self, list_phrase, context_phrases, context_phrase_embs, max_length=256):
         all_phrase_embs = []
 
-        encoded_phrase_list = self.tokenizer.batch_encode_plus([phrase for (phrase, _) in list_phrase], max_length=128, padding='max_length', truncation=True, add_special_tokens=True)
+        encoded_phrase_list = self.tokenizer.batch_encode_plus(list_phrase, max_length=128, padding='max_length', truncation=True, add_special_tokens=True)
         encoded_context_list = self.tokenizer.batch_encode_plus(context_phrases, max_length=max_length, padding='max_length', truncation=True, add_special_tokens=True)
 
         for idx, (encoded_phrase, encoded_sent) in enumerate(zip(encoded_phrase_list["input_ids"], encoded_context_list["input_ids"])):

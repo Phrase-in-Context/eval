@@ -171,8 +171,7 @@ class SemanticSearch(AbsSearch):
                 results = [{"phrase": phrase, "score": score} for phrase, score in zip(phrases, scores)]
             else:
                 # ThangPM: Score batch for contextual embeddings
-                scores = self.scorer.score_batch_contextual(query, phrases, self.sentences, self.list_oracle, self.max_seq_length,
-                                                            window_size=window_size, use_context_query=True)
+                scores = self.scorer.score_batch_contextual(query, phrases, self.sentences, self.list_oracle, self.max_seq_length, window_size=window_size, use_context_query=True)
 
                 phrases.extend(self.list_oracle)  # add oracle to the list
                 results = [{"phrase": phrase[0], "score": score} for phrase, score in zip(phrases, scores)]
@@ -183,14 +182,20 @@ class SemanticSearch(AbsSearch):
         
         return results
 
-    def search_for_demo(self, query, phrases, top_n=10):
+    def search_for_demo(self, query, candidates, token_sentences, top_n=10, contextual=False):
         """ """
-        self.logger.debug('number of candidates: %d', len(phrases))
+        self.logger.debug('number of candidates: %d', len(candidates))
 
         # apply scorer
-        phrases_only = [phrase for phrase, _ in phrases]
-        scores = self.scorer.score_batch(query, phrases_only)
-        results = [{"phrase": phrase, "score": score} for phrase, score in zip(phrases, scores)]
+        if not contextual:
+            phrases_only = [phrase for phrase, _, _ in candidates]
+            scores = self.scorer.score_batch(query, phrases_only)
+            results = [{"phrase": phrase, "score": score} for phrase, score in zip(candidates, scores)]
+        else:
+            # sentences_only = [sentences for _, _, sentences in candidates]
+            # phrases_with_indices = [(phrase, indices) for phrase, indices, _ in candidates]
+            scores = self.scorer.score_batch_contextual(query, candidates, token_sentences, self.list_oracle, max_seq_length=512, window_size=-1, use_context_query=True)
+            results = [{"phrase": phrase, "score": score} for phrase, score in zip(candidates, scores)]
 
         results = sorted(results, reverse=True, key=lambda x: x['score'])[:top_n]
 

@@ -7,8 +7,6 @@ import time
 import json
 import random
 import argparse
-import nltk
-from nltk.corpus import stopwords
 from tqdm import tqdm
 from datasets import load_dataset
 
@@ -19,11 +17,6 @@ from semsearch import SemanticSearch
 
 sys.path.append("../../")
 logger = CreateLogger()
-
-nltk.download('punkt')
-nltk.download("stopwords")
-stop_words = set(stopwords.words('english'))
-tokenizer = nltk.data.load('tokenizers/punkt/PY3/english.pickle')
 
 
 def get_metrics(run_results):

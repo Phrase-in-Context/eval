@@ -1,7 +1,7 @@
 # Install DensePhrases (ThangPM: Will support it later)
 git clone -b v1.1.0 https://github.com/princeton-nlp/DensePhrases.git
 cd DensePhrases
-yes yes | ./config.sh
+# yes yes | ./config.sh
 rm -rf slides/
 python setup.py develop
 

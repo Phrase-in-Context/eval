@@ -297,4 +297,4 @@ Contact us via email or create github issues if you have any questions/requests.
 [license-url]: https://github.com/Phrase-in-Context/eval/blob/master/LICENSE.txt
 [linkedin-shield]: https://img.shields.io/badge/-LinkedIn-black.svg?style=for-the-badge&logo=linkedin&colorB=555
 [linkedin-url]: https://linkedin.com/in/thangpm
-[pic-sample]: images/pic_sample.png
+[pic-sample]: images/pic_construction.png

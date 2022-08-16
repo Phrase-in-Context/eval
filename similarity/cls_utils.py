@@ -10,13 +10,15 @@ from torch import nn, optim, sum as tsum, reshape
 from torch.utils.data import DataLoader, Dataset
 
 from utils_phrasebert import load_model
+from datetime import datetime
 
 
 def get_data_emb(full_run_mode, task, split, model_path, device, shuffle=True, contextual=False):
 
     if task == "phrase_similarity":
+        # Train + Evaluate on PS-hard
         dataset_path = "PiC/phrase_similarity"
-        data_list = load_dataset(dataset_path)[split]
+        data_list = load_dataset(dataset_path)[split]   # download_mode="force_redownload"
     else:
         print("Task {} is currently not supported.".format(task))
         return
@@ -318,7 +320,7 @@ class ProbingModel(LightningModule):
         print(f'\nThe end of epoch {mode} accuracy is {accuracy_mean.item():.4f}')
 
         # ThangPM: Check qualitative examples for debugging purposes
-        # with open("../results/predictions.txt", "w") as output_file:
+        # with open("../results/predictions_{}.txt".format(datetime.now().strftime('%Y-%m-%d_%H:%M:%S')), "w") as output_file:
         #     [output_file.write("Idx {}: GT: {} -- Pred: {} -- Conf: {:.4f}\n".format(idx, y, (y_hat >= 0.5).float(), y_hat))
         #      for idx, (y, y_hat) in enumerate(zip(self.test_y, self.test_y_hat))]
 

@@ -29,3 +29,5 @@ flask_cors
 tornado
 requests-futures
 
+# Demo
+waitress

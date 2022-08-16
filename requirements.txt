@@ -5,7 +5,7 @@ tqdm
 wandb
 
 # Phrase Similarity
-pytorch-lightning
+pytorch-lightning==1.6.5
 sklearn
 simcse
 sentence-transformers

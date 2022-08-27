@@ -1,5 +1,5 @@
 
-function run() {
+function run {
   local DATASET=$1
   local SUBSET=$2
   local EXTRACTOR=$3
@@ -56,7 +56,7 @@ function run() {
   nohup python eval.py "${params[@]}" > ${OUTPUT_DIR}/eval_logs.txt &
 }
 
-function evaluate_model() {
+function evaluate_model {
   local DATASET=$1
   local DATASET_CONFIG=$2
   local MODEL=$3
@@ -87,6 +87,4 @@ function evaluate_model() {
 # ThangPM: DensePhrase will be supported later
 #run ${DATASET} "${DATASET_CONFIG}" "${EXTRACTOR}" 2 3 DensePhrases "princeton-nlp/densephrases-multi-query-multi" 256 "${ORACLE}" "${CONTEXTUAL}" -1 0
 
-
-
-
+"$@"

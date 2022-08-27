@@ -1,5 +1,5 @@
 
-function eval_qa() {
+function eval_qa {
 
   local MODEL_BASE=$1
   local DATASET=$2
@@ -30,14 +30,16 @@ function eval_qa() {
   params+=(--overwrite_cache)
   params+=(--seed "${SEED}")
 
-  params+=(--report_to wandb)
+  # Supported platforms are `"azure_ml"`, `"comet_ml"`, `"mlflow"`, `"tensorboard"` and `"wandb"`.
+  # Use `"all"` to report to all integrations installed, `"none"` for no integrations.
+  params+=(--report_to "none")
   params+=(--run_name "${DATASET}"/"${DATASET_CONFIG}"/qa/"${MODEL_BASE}"/evaluation)
 
   echo "${params[@]}"
   nohup python -u run_qa.py "${params[@]}" > $OUTPUT_DIR/predict_logs.txt &
 }
 
-function evaluate_all() {
+function evaluate_all {
   echo "*** EVALUATION STARTED ***"
 
   local DATASET="phrase_retrieval"   # ["phrase_retrieval", "phrase_sense_disambiguation"]
@@ -55,7 +57,7 @@ function evaluate_all() {
   eval_qa princeton-nlp/sup-simcse-bert-base-uncased "${DATASET}" "${DATASET_CONFIG}" "${OUTPUT_DIR}" 8 "${RANDOM_SEED}" 512 7
 }
 
-function evaluate_model() {
+function evaluate_model {
   local DATASET=$1
   local DATASET_CONFIG=$2
   local MODEL=$3
@@ -84,4 +86,4 @@ function evaluate_model() {
 
 #evaluate_all
 
-
+"$@"

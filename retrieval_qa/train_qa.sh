@@ -1,5 +1,5 @@
 
-function train_qa() {
+function train_qa {
 
   local MODEL_BASE=$1
   local DATASET=$2
@@ -38,14 +38,16 @@ function train_qa() {
   params+=(--metric_for_best_model "eval_exact_match")
   params+=(--load_best_model_at_end True)
 
-  params+=(--report_to wandb)
+  # Supported platforms are `"azure_ml"`, `"comet_ml"`, `"mlflow"`, `"tensorboard"` and `"wandb"`.
+  # Use `"all"` to report to all integrations installed, `"none"` for no integrations.
+  params+=(--report_to "none")
   params+=(--run_name "${DATASET}"/"${DATASET_CONFIG}"/qa/"${MODEL_BASE}"/finetuned)
 
   echo "${params[@]}"
   nohup python -u run_qa.py "${params[@]}" > $OUTPUT_DIR/finetune_logs.txt &
 }
 
-function finetune_all() {
+function finetune_all {
   echo "*** FINETUNING STARTED ***"
 
   local DATASET="phrase_retrieval"  # ["phrase_retrieval", "phrase_sense_disambiguation"]
@@ -63,7 +65,7 @@ function finetune_all() {
   train_qa princeton-nlp/sup-simcse-bert-base-uncased "${DATASET}" "${DATASET_CONFIG}" "${OUTPUT_DIR}" 8 8 "${RANDOM_SEED}" 512 7
 }
 
-function finetune_model() {
+function finetune_model {
   local DATASET=$1
   local DATASET_CONFIG=$2
   local MODEL=$3
@@ -92,4 +94,4 @@ function finetune_model() {
 
 #finetune_all
 
-
+"$@"

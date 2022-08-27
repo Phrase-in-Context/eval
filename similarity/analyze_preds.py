@@ -11,7 +11,7 @@ file_names = ["predictions_contextual", "predictions_non_contextual"]
 
 for file_name in file_names:
 
-    # False postives + False negatives
+    # False positives + False negatives
     fps, fns = [], []
 
     with open("../results/{}.txt".format(file_name), "r") as input_file:

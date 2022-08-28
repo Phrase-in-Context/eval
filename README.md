@@ -218,7 +218,7 @@ bash train_qa.sh finetune_model "${DATASET}" "${DATASET_CONFIG}" "${MODEL}"
 bash eval_qa.sh evaluate_model "${DATASET}" "${DATASET_CONFIG}" "${MODEL}"
 ```
 * `DATASET_CONFIG` can only be exported to an empty string `""` since PSD has only one version. Regarding `MODEL`, you can follow the provided list in the PR section to train and evaluate other models.
-* TThe **results** and **log file** of training and evaluation are stored under the folder `../results/phrase_sense_disambiguation/qa`
+* The **results** and **log file** of training and evaluation are stored under the folder `../results/phrase_sense_disambiguation/qa`
 
 <!-- ### 2. Evaluate your own models -->
 

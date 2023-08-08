@@ -2,7 +2,7 @@ import numpy as np
 import torch
 import torch.nn.functional as F
 from datasets import load_dataset
-from densephrases import DensePhrases
+# from densephrases import DensePhrases
 from pytorch_lightning import LightningModule
 from sentence_transformers import SentenceTransformer
 from simcse import SimCSE
